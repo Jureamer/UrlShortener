@@ -19,8 +19,8 @@ export class CompService {
         }
 
         // 등록되지 않았다면 새로운 shortUrl을 생성하여 반환
-        const shortUrl = `http://localhost:3000/`
-        return 'http://www.naver.com'
+        // const shortUrl = `http://localhost:3000/`
+        // return 'http://www.naver.com'
     }
 
     async getShortUrl(url: string): Promise<string[]> {
