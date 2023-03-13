@@ -14,7 +14,7 @@ export class Url {
     @IsUrl()
     shortUrl: string
 
-    @Property()
+    @Property({ default: 'Y' })
     @IsEnum(['Y', 'N'])
     useYN: string
 
@@ -26,5 +26,15 @@ export class Url {
 
     // 만료일자 구하기 1주일
     @Property({ type: 'timestamp' })
-    expirationAt: String = new Date().toISOString().slice(0, 19).replace('T', ' ')
+    expirationAt: String
+
+    constructor(longUrl: string, shortUrl: string) {
+        let date = new Date()
+        date.setDate(date.getDate() + 7)
+        const newDate = date.toISOString().slice(0, 19).replace('T', ' ')
+
+        this.shortUrl = shortUrl
+        this.longUrl = longUrl
+        this.expirationAt = newDate
+    }
 }
