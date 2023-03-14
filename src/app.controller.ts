@@ -1,18 +1,12 @@
 import { CompService } from './comp/comp.service'
-import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common'
-import { AppService } from './app.service'
+import { Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/common'
 import { Response } from 'express'
 
-@Controller()
+@Controller('')
 export class AppController {
-    constructor(private readonly appService: AppService, private readonly compService: CompService) {}
+    constructor(private readonly compService: CompService) {}
 
-    @Get()
-    getHello(): string {
-        return this.appService.getHello()
-    }
-
-    @Get('/:url')
+    @Get(':url')
     async getRedirectUrl(@Param('url') url: string, @Res() res: Response) {
         const redirectUrl = await this.compService.getRedirectUrl(url)
 
