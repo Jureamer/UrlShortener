@@ -16,44 +16,42 @@ export class CompService {
     ) {}
 
     async checkValidation(url: string): Promise<Boolean> {
-        // url 유효성 체크
         return await axios
             .get(url)
             .then((_) => {
-                console.log(`_ ${_}`)
                 return true
             })
             .catch((_) => {
-                console.error(`Error: ${_}`)
                 return false
             })
     }
 
+    attachServerUrl(url: string): string {
+        return 'localhost:3000/' + url
+    }
+
     async shortenUrl(longUrl: string) {
-        console.log(`longUrl: ${longUrl}`)
         // longUrl 유효성 체크
         const isValidate = await this.checkValidation(longUrl)
 
-        console.log(`isValidate: ${isValidate}`)
         if (!isValidate) {
-            return { longUrl: '', shortUrl: '' }
+            return null
         }
 
         // 기존에 등록된 URL이면 기존의 shortUrl을 반환
         const result = await this.compRepository.findOne({ longUrl })
 
-        console.log(`이미 등록된 URL입니다.: ${result}`)
         if (result) {
+            result.shortUrl = this.attachServerUrl(result.shortUrl)
             return result
         }
 
         // 등록되지 않았다면 새로운 Url 만들어서 반환
         const shortUrl = await this.getNewShortUrl()
 
-        console.log(`shortUrl: ${shortUrl}`)
         const body = new Url(longUrl, shortUrl)
         await this.compRepository.persistAndFlush(body)
-        console.log(`body: ${body}`)
+        body.shortUrl = this.attachServerUrl(body.shortUrl)
         return body
     }
 
@@ -74,7 +72,6 @@ export class CompService {
     }
 
     async getRedirectUrl(shortUrl: string): Promise<string> {
-        console.log(`url: ${shortUrl}`)
         try {
             const result = await this.compRepository.findOneOrFail({ shortUrl })
             return result.longUrl
