@@ -1,12 +1,9 @@
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
-import { LoggerService } from '../common/middlewares/logger.service'
-import { EntityManager, EntityRepository } from '@mikro-orm/mysql'
+import { EntityRepository } from '@mikro-orm/mysql'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { Url } from './entity/comp.entity'
 import axios from 'axios'
-
-const BASE62 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+import { getOneMonthAfterBasedCurrentDate, getRandomId } from 'src/common/util'
 
 @Injectable()
 export class CompService {
@@ -56,38 +53,27 @@ export class CompService {
     }
 
     async getNewShortUrl(): Promise<string> {
-        let randomId8 = ''
-
-        while (randomId8.length < 8) {
-            const num = Math.round(Math.random() * 61)
-            randomId8 += BASE62[num]
-        }
-
-        const isExist = await this.compRepository.findOne({ shortUrl: randomId8 })
+        let randomId7 = getRandomId(7)
+        const isExist = await this.compRepository.findOne({ shortUrl: randomId7 })
 
         if (isExist) {
-            randomId8 = await this.getNewShortUrl()
+            randomId7 = getRandomId(7)
         }
-        return randomId8
+        return randomId7
     }
 
     async getRedirectUrl(shortUrl: string): Promise<string> {
         try {
             const result = await this.compRepository.findOneOrFail({ shortUrl })
+            // 조회 할 경우 한달 뒤로 업데이트
+            console.log(`현재 기준  한달 뒤: ${getOneMonthAfterBasedCurrentDate()}`)
+            await this.compRepository.nativeUpdate(
+                { id: result.id },
+                { expirationAt: getOneMonthAfterBasedCurrentDate() },
+            )
             return result.longUrl
         } catch (err) {
             return undefined
         }
-    }
-
-    async redirectUrl(shortUrl: string): Promise<string[]> {
-        const result = await this.compRepository.findOneOrFail({ shortUrl })
-        if (result) {
-        }
-        return []
-    }
-
-    async shorten(url: string): Promise<string> {
-        return ''
     }
 }
