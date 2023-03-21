@@ -5,24 +5,16 @@ html(lang="kr")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
     title short.ly
+    
   body
     h1 short.ly
     h2 긴 URL을 단축 해보세요!
+    h3 최종 목적지 URL만 변환이 가능합니다!
     form
       label(for="url-input") Enter a URL:
       input(type="text" id="url-input" name="url-input" placeholder="https://단축할 긴 주소를 입력하세요")
       button(type="button" id="convert-btn") Convert URL
       p Converted URL: #[span#converted-url]
-
-    script(
-      const inputField = document.querySelector('#url-input')
-      const convertBtn = document.querySelector('#convert-btn')
-      const convertedUrlSpan = document.querySelector('#converted-url')
-
-      convertBtn.addEventListener('click', (e) => {
-        console.log('click!!!')
-        const url = inputField.value
-        const convertedUrl = encodeURI(url)
-        convertedUrlSpan.textContent = convertedUrl
-      })
-    )
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js" integrity="sha512-LUKzDoJKOLqnxGWWIBM4lzRBlxcva2ZTztO8bTcWPmDSpkErWx0bSP4pdsjNH8kiHAUPaT06UXcb+vOEZH+HpQ==" crossorigin="anonymous" referrerpolicy="no-referrer")
+    script(type='module', src='./js/util.js')
+    script(type='module', src='./js/index.js')

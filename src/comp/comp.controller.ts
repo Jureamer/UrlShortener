@@ -1,3 +1,4 @@
+import { LoggerService } from './../common/middlewares/logger.service'
 import { Controller, Post, Body, Get, Param } from '@nestjs/common'
 import { CompService } from './comp.service'
 
@@ -8,7 +9,7 @@ export class CompController {
     @Post()
     async shortenUrl(@Body('url') url: string) {
         const shortUrl = await this.compService.shortenUrl(url)
-
+        console.log(`shortUrl: ${shortUrl}`)
         if (!shortUrl) {
             return { status: 400, message: '유효한 URL이 아닙니다.', data: null }
         }

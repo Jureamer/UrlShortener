@@ -1,5 +1,4 @@
-import { MikroORMOptions } from '@mikro-orm/core'
-import { MikroOrmModuleOptions, MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs'
+import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs'
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
 
 export default {
@@ -9,7 +8,7 @@ export default {
     entities: ['src/**/entity/*.entity.{ts,js}'], // no need for `entitiesTs` this way
     dbName: process.env.DATABASE_NAME || 'url',
     user: process.env.DATABASE_USER || 'root',
-    host: process.env.DATABASE_HOST || 'localhost',
+    host: process.env.DATABASE_HOST || '127.0.0.1',
     password: process.env.DATABASE_PASSWORD || 'gksals49',
     type: process.env.DATABASE_TYPE || 'mysql',
     debug: true,

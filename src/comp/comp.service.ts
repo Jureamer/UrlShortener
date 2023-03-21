@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { Url } from './entity/comp.entity'
 import axios from 'axios'
 import { getOneMonthAfterBasedCurrentDate, getRandomId } from 'src/common/util'
+import { HOSTNAME, SERVER_HOST } from 'src/common/config'
 
 @Injectable()
 export class CompService {
@@ -24,7 +25,7 @@ export class CompService {
     }
 
     attachServerUrl(url: string): string {
-        return 'localhost:3000/' + url
+        return SERVER_HOST + '/' + url
     }
 
     async shortenUrl(longUrl: string) {
