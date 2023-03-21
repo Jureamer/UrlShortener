@@ -1,18 +1,21 @@
-import { HttpExceptionFilter } from './common/filters/httpException.filter'
-import { ValidationPipe } from '@nestjs/common'
+import { join } from 'path'
+import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 import { AppModule } from './app.module'
-import { UndefinedNullInterceptor } from './common/interceptors/undefined.null.interceptor'
+import { NestExpressApplication } from '@nestjs/platform-express'
+import { appGlobalConfig, HOSTNAME, PORT, WORKING_DIR } from '..'
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule)
+    const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
-    app.useGlobalPipes(new ValidationPipe({ transform: true }))
-    app.useGlobalInterceptors(new UndefinedNullInterceptor())
-    app.useGlobalFilters(new HttpExceptionFilter())
-    app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER))
+    appGlobalConfig(app)
+    app.useStaticAssets(join(WORKING_DIR, 'public'))
+    app.setBaseViewsDir(join(WORKING_DIR, 'views'))
+    app.setViewEngine('pug')
 
-    await app.listen(3000)
+    await app.listen(PORT, HOSTNAME, () => {
+        Logger.log(`Nest listening on http://${HOSTNAME}:${PORT}`, 'Bootstrap')
+    })
 }
+
 bootstrap()
