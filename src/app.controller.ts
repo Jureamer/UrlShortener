@@ -1,17 +1,14 @@
 import { CompService } from './comp/comp.service'
 import { Controller, Get, HttpStatus, Param, Redirect, Render, Res, UseInterceptors } from '@nestjs/common'
-import { PageInterceptor } from './common/interceptors'
 import { Response } from 'express'
 
 @Controller()
-@UseInterceptors(PageInterceptor)
 export class AppController {
     constructor(private readonly compService: CompService) {}
 
     @Get()
     @Render('index')
-    root(@Res() res: Response) {
-        // return res.redirect('/')
+    root() {
         return { title: 'Home Page' }
     }
 

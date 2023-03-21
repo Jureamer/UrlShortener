@@ -4,11 +4,14 @@ const convertedUrlSpan = document.querySelector('#converted-url')
 
 convertBtn.addEventListener('click', async (e) => {
     const url = inputField.value
-    console.log(`url: ${url}`)
     const API_URL = 'http://localhost:3323/comp'
+    const token = grecaptcha.getResponse()
+
+    console.log(`token: ${token}`)
+
+    if (!token) alert('로봇이 아닙니다를 먼저 체크 해주시기 바랍니다.')
     await axios
-        .post(API_URL, { url })
-        // .then((res) => res)
+        .post(API_URL, { url, token })
         .then((res) => {
             console.log(`res.data: ${JSON.stringify(res.data)}`)
             if (res.data.data) {

@@ -9,6 +9,7 @@ async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
     appGlobalConfig(app)
+    app.enableCors()
     app.setViewEngine('pug')
     app.useStaticAssets(join(WORKING_DIR, 'public'))
     app.setBaseViewsDir(join(WORKING_DIR, 'views'))

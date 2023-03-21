@@ -28,16 +28,21 @@ export class CompService {
         return SERVER_HOST + '/' + url
     }
 
-    async shortenUrl(longUrl: string) {
+    async shortenUrl(params) {
         // longUrl 유효성 체크
-        const isValidate = await this.checkValidation(longUrl)
+        const secretKey = '6LfC3xYlAAAAAE2VVgOIDqPedTUwuSHpJ0W7SNcq'
+        console.log(`params: ${JSON.stringify(params)}`)
+        await axios
+            .post(`https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${params.token}`, {})
+            .then((res) => console.log(res.data))
+        const isValidate = await this.checkValidation(params.longUrl)
 
         if (!isValidate) {
             return null
         }
 
         // 기존에 등록된 URL이면 기존의 shortUrl을 반환
-        const result = await this.compRepository.findOne({ longUrl })
+        const result = await this.compRepository.findOne({ longUrl: params.longUrl })
 
         if (result) {
             result.shortUrl = this.attachServerUrl(result.shortUrl)
@@ -47,7 +52,7 @@ export class CompService {
         // 등록되지 않았다면 새로운 Url 만들어서 반환
         const shortUrl = await this.getNewShortUrl()
 
-        const body = new Url(longUrl, shortUrl)
+        const body = new Url(params.longUrl, shortUrl)
         await this.compRepository.persistAndFlush(body)
         body.shortUrl = this.attachServerUrl(body.shortUrl)
         return body

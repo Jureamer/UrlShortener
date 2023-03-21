@@ -12,6 +12,7 @@ import { winstonConfig, WORKING_DIR } from '..'
 import * as MikroOrmConfig from '../mikro-orm.config'
 import { ConfigModule } from '@nestjs/config'
 import { getEnvPath } from './common/env-loader/env-files/env-helper'
+import { GoogleRecaptchaModule, GoogleRecaptchaNetwork } from '@nestlab/google-recaptcha'
 const envFilePath: string = getEnvPath(WORKING_DIR + 'src/common/env-loader/env-files')
 
 @Module({
@@ -25,6 +26,13 @@ const envFilePath: string = getEnvPath(WORKING_DIR + 'src/common/env-loader/env-
         MikroOrmModule.forRoot(MikroOrmConfig.default),
         MikroOrmModule.forFeature([Url]),
         WinstonModule.forRoot(winstonConfig()),
+        GoogleRecaptchaModule.forRoot({
+            // secretKey: process.env.GOOGLE_RECAPTCHA_SECRET_KEY,
+            secretKey: '6LfC3xYlAAAAAE2VVgOIDqPedTUwuSHpJ0W7SNcq',
+            response: (req) => req.headers.recaptcha,
+            skipIf: process.env.NODE_ENV !== 'production',
+            network: GoogleRecaptchaNetwork.Recaptcha,
+        }),
     ],
     controllers: [AppController],
     providers: [CompService, EntityRepository],

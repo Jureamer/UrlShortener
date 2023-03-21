@@ -5,7 +5,8 @@ html(lang="kr")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
     title short.ly
-    
+    script(type='module', src='./js/before.js')
+    script(src="https://www.google.com/recaptcha/api.js" async defer)
   body
     h1 short.ly
     h2 긴 URL을 단축 해보세요!
@@ -15,6 +16,8 @@ html(lang="kr")
       input(type="text" id="url-input" name="url-input" placeholder="https://단축할 긴 주소를 입력하세요")
       button(type="button" id="convert-btn") Convert URL
       p Converted URL: #[span#converted-url]
+    form(id="g-recaptcha-form")
+      div(class="g-recaptcha" data-sitekey="6LfC3xYlAAAAAPcFcBaenWgpmPZoM0In4MBGucoM")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js" integrity="sha512-LUKzDoJKOLqnxGWWIBM4lzRBlxcva2ZTztO8bTcWPmDSpkErWx0bSP4pdsjNH8kiHAUPaT06UXcb+vOEZH+HpQ==" crossorigin="anonymous" referrerpolicy="no-referrer")
     script(type='module', src='./js/util.js')
     script(type='module', src='./js/index.js')
