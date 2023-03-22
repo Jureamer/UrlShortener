@@ -30,7 +30,7 @@ export class Url {
 
     constructor(longUrl: string, shortUrl: string) {
         let date = new Date()
-        date.setDate(date.getDate() + 7)
+        date.setDate(date.getDate() + 30)
         const newDate = date.toISOString().slice(0, 19).replace('T', ' ')
 
         this.shortUrl = shortUrl

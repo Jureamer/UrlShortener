@@ -12,12 +12,10 @@ export class AppController {
         return { title: 'Home Page' }
     }
 
-    @Get(':url')
+    @Get('/:url')
     async getRedirectUrl(@Param('url') url: string, @Res() res: Response) {
-        const redirectUrl = await this.compService.getRedirectUrl(url)
-
         if (url) {
-            res.redirect(HttpStatus.PERMANENT_REDIRECT, redirectUrl)
+            res.redirect(HttpStatus.PERMANENT_REDIRECT, await this.compService.getRedirectUrl(url))
         } else {
             res.status(404).send('URL이 존재하지 않습니다.')
         }

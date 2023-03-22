@@ -1,27 +1,42 @@
 const inputField = document.querySelector('#url-input')
 const convertBtn = document.querySelector('#convert-btn')
-const convertedUrlSpan = document.querySelector('#converted-url')
-
+const convertedUrl = document.querySelector('#converted-url')
+const expirationDate = document.querySelector('#expiration-date')
+const copyBtn = document.querySelector('#copy-btn')
+let convertedUrlData = ''
 convertBtn.addEventListener('click', async (e) => {
     const url = inputField.value
-    const API_URL = 'http://localhost:3323/comp'
     const token = grecaptcha.getResponse()
 
-    console.log(`token: ${token}`)
-
     if (!token) alert('로봇이 아닙니다를 먼저 체크 해주시기 바랍니다.')
+
     await axios
-        .post(API_URL, { url, token })
+        .post(COMP_API_URL, { url, token })
         .then((res) => {
-            console.log(`res.data: ${JSON.stringify(res.data)}`)
             if (res.data.data) {
-                convertedUrlSpan.textContent = res.data.data.shortUrl
+                // 복사 값 저장
+                convertedUrlData = res.data.data.shortUrl
+
+                convertedUrl.textContent = `변환된 URL:  ${res.data.data.shortUrl}`
+                expirationDate.textContent = `만료일: ${res.data.data.expirationAt} ${EXPIRATION_INFORM}`
+                convertedUrl.classList.remove('hide')
+                expirationDate.classList.remove('hide')
+                // copy 버튼 추가
+                convertedUrl.appendChild(copyBtn)
             } else {
-                convertedUrlSpan.textContent = res.data.message
+                convertedUrl.textContent = res.data.message
             }
+            grecaptcha.reset()
         })
         .catch((err) => {
             console.log(`err: ${err}`)
-            convertedUrlSpan.textContent = '에러입니다.'
+            convertedUrl.textContent = '에러입니다.'
+            convertedUrl.classList.remove('hide')
+            grecaptcha.reset()
         })
+})
+
+copyBtn.addEventListener('click', (e) => {
+    e.preventDefault()
+    window.navigator.clipboard.writeText(convertedUrlData).then(() => alert('복사되었습니다, 감사합니다.'))
 })

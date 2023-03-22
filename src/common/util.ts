@@ -15,3 +15,12 @@ export const getRandomId = (length: number): string => {
 
     return randomId
 }
+
+export const convertYYYYMMDD = (date: Date | String): string => {
+    console.log(`typeof date: ${typeof date}, date: ${date} date instanceof Date: ${date instanceof Date}`)
+    if (date instanceof Date) {
+        return date.toLocaleDateString('ko')
+    } else {
+        return date.slice(0, 10)
+    }
+}

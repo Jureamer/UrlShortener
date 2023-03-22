@@ -3,7 +3,7 @@ import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
 import { Url } from './entity/comp.entity'
 import axios from 'axios'
-import { getOneMonthAfterBasedCurrentDate, getRandomId } from 'src/common/util'
+import { convertYYYYMMDD, getOneMonthAfterBasedCurrentDate, getRandomId } from 'src/common/util'
 import { HOSTNAME, SERVER_HOST } from 'src/common/config'
 
 @Injectable()
@@ -28,37 +28,36 @@ export class CompService {
         return SERVER_HOST + '/' + url
     }
 
-    async shortenUrl(params) {
+    async shortenUrl(longUrl: string) {
         // longUrl 유효성 체크
-        const secretKey = '6LfC3xYlAAAAAE2VVgOIDqPedTUwuSHpJ0W7SNcq'
-        console.log(`params: ${JSON.stringify(params)}`)
-        await axios
-            .post(`https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${params.token}`, {})
-            .then((res) => console.log(res.data))
-        const isValidate = await this.checkValidation(params.longUrl)
+        const isValidate = await this.checkValidation(longUrl)
 
         if (!isValidate) {
             return null
         }
 
-        // 기존에 등록된 URL이면 기존의 shortUrl을 반환
-        const result = await this.compRepository.findOne({ longUrl: params.longUrl })
-
-        if (result) {
-            result.shortUrl = this.attachServerUrl(result.shortUrl)
-            return result
+        const makeResponseForm = (response: Url) => {
+            response.shortUrl = this.attachServerUrl(response.shortUrl)
+            response.expirationAt = convertYYYYMMDD(response.expirationAt)
+            return response
         }
 
-        // 등록되지 않았다면 새로운 Url 만들어서 반환
-        const shortUrl = await this.getNewShortUrl()
+        // 기존에 등록된 URL이면 기존의 shortUrl을 반환
+        const result = await this.compRepository.findOne({ longUrl: longUrl })
 
-        const body = new Url(params.longUrl, shortUrl)
-        await this.compRepository.persistAndFlush(body)
-        body.shortUrl = this.attachServerUrl(body.shortUrl)
-        return body
+        if (result) {
+            return makeResponseForm(result)
+        } else {
+            // 등록되지 않았다면 새로운 Url 만들어서 반환
+            const shortUrl = await this.generateShortUrl()
+            const body = new Url(longUrl, shortUrl)
+            await this.compRepository.persistAndFlush(body)
+
+            return makeResponseForm(body)
+        }
     }
 
-    async getNewShortUrl(): Promise<string> {
+    async generateShortUrl(): Promise<string> {
         let randomId7 = getRandomId(7)
         const isExist = await this.compRepository.findOne({ shortUrl: randomId7 })
 
@@ -72,7 +71,6 @@ export class CompService {
         try {
             const result = await this.compRepository.findOneOrFail({ shortUrl })
             // 조회 할 경우 한달 뒤로 업데이트
-            console.log(`현재 기준  한달 뒤: ${getOneMonthAfterBasedCurrentDate()}`)
             await this.compRepository.nativeUpdate(
                 { id: result.id },
                 { expirationAt: getOneMonthAfterBasedCurrentDate() },
