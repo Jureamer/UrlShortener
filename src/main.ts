@@ -18,7 +18,7 @@ async function bootstrap() {
     app.setBaseViewsDir(join(WORKING_DIR, 'views'))
 
     await app.listen(PORT, () => {
-        Logger.log(`Nest listening on http://${HOST}:${PORT}`, 'Bootstrap')
+        Logger.log(`Nest listening on ${HOST}:${PORT}`, 'Bootstrap')
     })
 }
 

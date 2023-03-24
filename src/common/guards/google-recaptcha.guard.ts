@@ -10,9 +10,9 @@ export class RecaptchaGuard implements CanActivate {
         const { body } = context.switchToHttp().getRequest()
         const VERIFY_URL = this.configService.get<string>('RECAPTCHA_VERIFY_URL')
         const RECAPTCHA_SECRET = this.configService.get<string>('RECAPTCHA_SECRET')
-
         const { data } = await axios.post(`${VERIFY_URL}?response=${body.token}&secret=${RECAPTCHA_SECRET}`)
 
+        // 토큰 에러로 인한 요청 거부 처리하기
         if (!data.success) {
             throw new ForbiddenException()
         }

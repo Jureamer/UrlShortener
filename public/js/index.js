@@ -4,7 +4,9 @@ const convertedUrl = document.querySelector('#converted-url')
 const expirationDate = document.querySelector('#expiration-date')
 const copyBtn = document.querySelector('#copy-btn')
 
-const SERVER_HOST = 'shortener.shop'
+// 리팩토링 시 .env 처리
+// const SERVER_HOST = 'https://shortener.shop'
+const SERVER_HOST = 'http://localhost:8500'
 const COMP_API_URL = `${SERVER_HOST}/comp`
 const EXPIRATION_INFORM = '(생성된 URL은 30일간 유효합니다.)'
 

@@ -19,6 +19,7 @@ export class CompService {
                 return true
             })
             .catch((_) => {
+                console.error(`_ : ${_}`)
                 return false
             })
     }

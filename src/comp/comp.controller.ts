@@ -1,6 +1,5 @@
 import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common'
 import { CompService } from './comp.service'
-import { Recaptcha } from '@nestlab/google-recaptcha'
 import { RecaptchaGuard } from 'src/common/guards/google-recaptcha.guard'
 @Controller('comp')
 @UseGuards(RecaptchaGuard)
@@ -10,7 +9,6 @@ export class CompController {
     @Post()
     async shortenUrl(@Body('url') url: string) {
         const shortUrl = await this.compService.shortenUrl(url)
-        console.log(`shortUrl: ${JSON.stringify(shortUrl)}`)
         if (!shortUrl) {
             return { status: 400, message: '유효한 URL이 아닙니다.', data: null }
         }

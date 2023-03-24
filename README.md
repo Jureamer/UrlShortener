@@ -15,5 +15,6 @@
 -   [x] EC2 내 PM2, RDS(mysql) 연결
 -   [x] HTTP -> HTTPS 리다이렉트 (로드밸런서)
 -   [ ] 자주 사용되는 URL 캐시 (Redis)
+-   [ ] Recaptcha 실패 분기 처리
 -   [ ] 테스트 코드 작성
 -   [ ] Next.JS로 리팩토링

@@ -1,7 +1,5 @@
 import { Options } from '@mikro-orm/mysql'
-import { MikroOrmModuleOptions } from '@mikro-orm/nestjs'
 
-console.log('process.env.DATABASE_USER_NAME', process.env.DATABASE_USER_NAME)
 const mikroOrmConfig: Options = {
     type: 'mysql',
     dbName: process.env.DATABASE_NAME,
