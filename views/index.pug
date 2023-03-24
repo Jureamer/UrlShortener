@@ -1,0 +1,27 @@
+doctype html
+html(lang="kr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title Shortener
+    link(rel='stylesheet' href='css/style.css')
+    script(src="https://www.google.com/recaptcha/api.js" async defer)
+  body
+    h1 Shortener
+    h1 긴 URL을 단축 해보세요!
+    form
+      label(for="url-input")
+      input(type="text" id="url-input" name="url-input" placeholder="https://단축할 긴 주소를 입력하세요")
+      button(type="button" id="convert-btn") Convert URL
+      span 최종 목적지 URL만 변환이 가능합니다!
+      p#converted-url.hide
+        button(id="copy-btn" type="button")
+          img(src="https://blog.kakaocdn.net/dn/N1wUc/btqIl7XZtKM/b44qX9Six1vczz2ISWj4LK/img.png" alt="복사하기")
+      p#expiration-date.hide
+    form(id="g-recaptcha-form")
+      div(class="g-recaptcha" data-sitekey="6LfC3xYlAAAAAPcFcBaenWgpmPZoM0In4MBGucoM")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js" integrity="sha512-LUKzDoJKOLqnxGWWIBM4lzRBlxcva2ZTztO8bTcWPmDSpkErWx0bSP4pdsjNH8kiHAUPaT06UXcb+vOEZH+HpQ==" crossorigin="anonymous" referrerpolicy="no-referrer")
+    script(type='text/javascript', src='./js/index.js')
+
+    
