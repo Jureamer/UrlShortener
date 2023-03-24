@@ -1,7 +1,7 @@
 import * as path from 'path'
 
-export const PORT = 3323
-export const HOSTNAME = 'localhost'
-export const SERVER_HOST = `http://${HOSTNAME}:${PORT}`
+export const SERVER_PORT = process.env.SERVER_PORT
+export const SERVER_HOST = process.env.SERVER_HOST
+export const SERVER_API = `https://${SERVER_HOST}:${SERVER_PORT}`
 export const WORKING_DIR = path.resolve(__dirname, '../../../../../')
-export const RECAPTCHA_SECRET = '6LfC3xYlAAAAAE2VVgOIDqPedTUwuSHpJ0W7SNcq'
+export const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET

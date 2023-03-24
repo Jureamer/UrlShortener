@@ -3,7 +3,13 @@ const convertBtn = document.querySelector('#convert-btn')
 const convertedUrl = document.querySelector('#converted-url')
 const expirationDate = document.querySelector('#expiration-date')
 const copyBtn = document.querySelector('#copy-btn')
+
+const SERVER_HOST = 'shortener.shop'
+const COMP_API_URL = `${SERVER_HOST}/comp`
+const EXPIRATION_INFORM = '(생성된 URL은 30일간 유효합니다.)'
+
 let convertedUrlData = ''
+
 convertBtn.addEventListener('click', async (e) => {
     const url = inputField.value
     const token = grecaptcha.getResponse()
